@@ -1,0 +1,21 @@
+[
+	{
+		"title": "maceta",
+		"description": "grande",
+		"price": 500,
+		"thumbnail": "notiene",
+		"code": 1234,
+		"stock": 15,
+		"id": 3
+	},
+	{
+		"title": "jarra",
+		"description": "linda",
+		"price": 500,
+		"thumbnail": "notiene",
+		"code": 265,
+		"stock": 50,
+		"id": 1,
+		"key": 50000000
+	}
+]
