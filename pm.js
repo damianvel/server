@@ -1,10 +1,10 @@
-const fs = require('fs')
+import * as fs from 'fs';
 
 
 export default class ProductManager {
 
-    constructor() {
-        this.path = "./products.json"
+    constructor(path) {
+        this.path = path
         this.products = []
     }
 
@@ -33,9 +33,9 @@ export default class ProductManager {
 
                 this.products.push(newProduct)
 
+                const ruta = this.path
 
-
-                fs.writeFileSync(this.path, JSON.stringify(this.products, null, '\t'))
+                fs.writeFileSync(ruta, JSON.stringify(this.products, null, '\t'))
 
             }
 
@@ -52,7 +52,7 @@ export default class ProductManager {
         const productDb = productsDb.find(({ id }) => id === idInput)
 
         if (!productDb) {
-            return "Not found"
+            return null
         }
         return productDb
     }
@@ -100,54 +100,3 @@ export default class ProductManager {
         fs.writeFileSync(this.path, JSON.stringify(productsDb, null, '\t'))
     }
 }
-
-
-const productManager = new ProductManager()
-
-
-productManager.addProduct(
-
-    {
-        title: "jarra",
-        description: "linda",
-        price: 500,
-        thumbnail: "notiene",
-        code: 265,
-        stock: 50,
-    })
-
-
-productManager.addProduct({
-    title: "florero",
-    description: "negro",
-    price: 500,
-    thumbnail: "notiene",
-    code: 658,
-    stock: 15,
-    
-})
-
-
-productManager.addProduct({
-    title: "maceta",
-    description: "grande",
-    price: 500,
-    thumbnail: "notiene",
-    code: 1234,
-    stock: 15,
-})
-
-
-
-productManager.getProducts()
-
-
-productManager.getProductById(idInput = 1)
-
-
-
-productManager.deleteProductById(idInput = 2)
-
-productManager.updateProductById(idInput = 1, key = "price", value = 50000000)
-
-productManager.getProducts()

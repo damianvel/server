@@ -1,54 +1,53 @@
 import ProductManager from './pm.js'
 import express from 'express'
+import watch from 'node-watch'
 
 const app = express()
+watch('/', { recursive: true }, console.log);
+
 app.use(express.urlencoded({ extended: true }))
 
 const PORT = 8080
-const productManager = new ProductManager()
-const products = productManager.getProducts()
 
-app.use(express.urlencoded({ extended: true }))
+const productManager = new ProductManager("./products.json")
 
 app.listen(PORT, err => {
     if (err) console.log(err)
     console.log(`Escuchando en el puerto ${PORT}`)
 })
 
-
-
-app.get('/products', (request, response) => {
-    response.send(products)
+app.get('/', (req, res) => {
+    res.send({ message: 'haga su peticion' })
 })
 
 
-app.get('/query', (req, res) => {
-    console.log(req.query)
+
+app.get('/products', (req, res) => {
     const { limit } = req.query
+    const products = productManager.getProducts()
+    const lenght = Object.keys(products).length
+    const productosLimitados = products.filter((x) => (x.id < (parseInt(limit) + 1)))
+    
 
 
-    if (parseInt(limit) > products.lenght) {
-        return res.send(products)
+    if (parseInt(limit) < lenght) {
+        res.send(productosLimitados)
     }
-
-    let productosFiltrados = products.filter(x => x.index < limit + 1)
-
-    res.send({
-        productosFiltrados
-    })
+    else {
+        res.send(products)
+    }
 })
 
+app.get('/products/:pid', (req, res) => {
+    const { pid } = req.params
+    const idInput = parseInt(pid)
+    const produc = productManager.getProductById(idInput)
 
-app.get('/:pid', (req, res) => {
-    console.log(req.params)
-    const { idInput } = req.params
-
-    const productosFiltrados = products.find(({ id }) => id === idInput)
-
-    if (!productosFiltrados) {
-        return "Not found"
+    if (!produc) {
+        res.send({ message: 'el producto no existe' })
     }
+    else {
+        res.send(produc)
 
-    res.send(productosFiltrados)
-    
+    }
 })
